@@ -1,24 +1,69 @@
 <template>
   <q-page class="flex column">
-  <div class="col q-pt-lg q-px-md">
-    <q-input 
-    filled bottom-slots v-model="search" 
-    label="Search" 
-    >
 
-        <template v-slot:before>
-          <q-icon name="my_location"/>
-        </template>
+    <div class="col q-pt-lg q-px-md">
+      <q-input 
+      filled bottom-slots v-model="search" 
+      label="Пошук" 
+      >
 
-        <template v-slot:hint>
-          Field hint
-        </template>
+          <template v-slot:before>
+            <q-icon name="my_location"/>
+          </template>
 
-        <template v-slot:append>
-          <q-btn round dense flat icon="search" />
-        </template>
-      </q-input>
-  </div>
+          <template v-slot:hint>
+            Підказка поля
+          </template>
+
+          <template v-slot:append>
+            <q-btn round dense flat icon="search" />
+          </template>
+        </q-input>
+    </div>
+
+    <template v-if="weatherData">
+
+      <div class="col text-white text-center">
+        <div class="text-h4 text-weight-light custom-font">
+          Відень
+        </div>
+        <div class="text-h6 text-weight-light custom-font">
+          Дощ
+        </div>
+        <div class="text-h1 text-weight-thin custom-font q-my-lg relative-position">
+          <span>13</span>
+          <span class="text-h4 relative-position degree" >&deg;</span>
+        </div>
+    </div>
+    
+
+    <div class="col text-center">
+      <img src="" alt="">
+    </div>
+
+    </template>
+
+    <template v-else>
+      <div class="col text-center text-white custom-font">
+        <div class="col text-h2 text-white custom-font text-weight-thin">
+         Прогноз <br> Погоди
+        </div>
+        
+        <q-btn
+          size="35px"
+          round
+          color=""
+          icon="map"
+        />
+      </div>
+
+      
+      
+
+    </template>
+
+
+    
   </q-page>
 </template>
 
@@ -28,7 +73,8 @@ defineOptions({
   name: 'IndexPage',
     data(){
       return{
-        search:''
+        search:'',
+        weatherData: null
       }
     }
 });

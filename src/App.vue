@@ -16,4 +16,10 @@ defineOptions({
   .main-layout {
     background: linear-gradient(to left, #fff, #076585);
   }
+  .custom-font {
+    font-family: 'Courier New', sans-serif; //Garamond
+  }
+  .degree {
+    top: -44px;
+  }
 </style>
