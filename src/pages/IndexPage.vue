@@ -25,20 +25,24 @@
 
       <div class="col text-white text-center">
         <div class="text-h4 text-weight-light custom-font">
-          Відень
+          Відень 
+          <!-- {{ weatherData.name  }} -->
         </div>
         <div class="text-h6 text-weight-light custom-font">
           Дощ
+          <!-- {{ weatherData.weather[0].main }} -->
         </div>
         <div class="text-h1 text-weight-thin custom-font q-my-lg relative-position">
-          <span>13</span>
-          <span class="text-h4 relative-position degree" >&deg;</span>
+          <span>13<!-- {{Math.round(weatherData.main.temp) }} -->
+          </span>
+          <span class="text-h4 relative-position degree" >&deg;C</span>
         </div>
     </div>
     
 
     <div class="col text-center">
-      <img src="" alt="">
+      <img :src="`https://openweathermap.org/img/wn/10n@2x.png`" >
+      <!--<img :src="`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`" >  -->
     </div>
 
     </template>
@@ -74,7 +78,7 @@ defineOptions({
     data(){
       return{
         search:'',
-        weatherData: null
+        weatherData: true
       }
     }
 });
