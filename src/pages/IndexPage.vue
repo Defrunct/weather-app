@@ -2,20 +2,16 @@
   <q-page class="flex column">
 
     <div class="col q-pt-lg q-px-md">
-      <q-input 
-        filled bottom-slots v-model="search" 
-        label="Місто" 
-      >
+      <q-input filled bottom-slots v-model="search" label="Місто" >
+
         <template v-slot:before>
           <q-icon name="my_location"/>
         </template>
-        <!-- Підказка дійсно потрібна? -->
-        <template v-slot:hint>
-          Підказка поля
-        </template>
+        
         <template v-slot:append>
           <q-btn round dense flat icon="search" />
         </template>
+        
       </q-input>
     </div>
 
@@ -62,6 +58,8 @@
           </div>
         </div>
       </div> -->
+
+
       <div v-if="forecastData" class="weather-container">
         <div v-for="(data, index) in forecastData" :key="index" class="weather-day">
           <div class="day">{{ data.date }}</div>
@@ -72,6 +70,15 @@
             <span class="temp-high">{{ data.temp_max }}°C</span>
             <span class="temp-low">{{ data.temp_min }}°C</span>
           </div>
+        </div>
+      </div>
+    </template>
+
+    <!--Потрібно повідомлення про помилку у беку -->
+    <template v-else-if="errorMessage">
+      <div class="col text-center text-white custom-font">
+        <div class="col text-h2 text-white custom-font text-weight-thin">
+          Місто не знайдено. <br>Спробуйте ще раз.
         </div>
       </div>
     </template>
