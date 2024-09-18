@@ -14,7 +14,9 @@ defineOptions({
 
 <style lang="scss">
   .main-layout {
-    background: linear-gradient(to left, #fff, #076585);
+    background: linear-gradient(to left, #fff, #076585) no-repeat center center/cover;
+    // background: url('https://giphy.com/embed/s8I46GOKHm9l6') no-repeat center center/cover;
+    // background: linear-gradient(to bottom, #fff, #076585) no-repeat center center/cover;
   }
   .custom-font {
     font-family: 'Courier New', sans-serif; //Garamond

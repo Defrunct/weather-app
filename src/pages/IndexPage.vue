@@ -273,7 +273,11 @@
 }
 
 .temp-low {
-  color: #f5f5f7;
-  opacity: 0.6;
+  // color: #00921d;
+  // // opacity: 0.6;
+  color: #4589c5;
+  
 }
+
+
 </style>
