@@ -2,14 +2,14 @@
   <q-page class="flex column">
 
     <div class="col q-pt-lg q-px-md">
-      <q-input filled bottom-slots v-model="search" label="Місто" >
+      <q-input filled bottom-slots v-model="city" label="Місто" @keydown.enter="searchWeather">
 
         <template v-slot:before>
           <q-icon name="my_location"/>
         </template>
         
         <template v-slot:append>
-          <q-btn round dense flat icon="search" />
+          <q-btn round dense flat icon="search" @click="searchWeather" />
         </template>
         
       </q-input>
@@ -45,21 +45,8 @@
           <img :src="getWeatherIconReplacer(weatherData.weather[0].icon)" />
         </div>
       </div>
-      
-      <!-- <div class="weather-container">
-        <div v-for="(day, index) in weatherDataDays" :key="index" class="weather-day">
-          <div class="day">{{ day.name }}</div>
-          <div class="weather-icon">
-            <img :src="day.icon" :alt="day.description" />
-          </div>
-          <div class="temperature">
-            <span class="temp-high">{{ day.high }}°C</span>
-            <span class="temp-low">{{ day.low }}°C</span>
-          </div>
-        </div>
-      </div> -->
 
-
+      <!-- Панель прогнозу погоди -->
       <div v-if="forecastData" class="weather-container">
         <div v-for="(data, index) in forecastData" :key="index" class="weather-day">
           <div class="day">{{ data.date }}</div>
@@ -74,8 +61,7 @@
       </div>
     </template>
 
-    <!--Потрібно повідомлення про помилку у беку -->
-    <template v-else-if="errorMessage">
+    <template v-if="errorMessage">
       <div class="col text-center text-white custom-font">
         <div class="col text-h2 text-white custom-font text-weight-thin">
           Місто не знайдено. <br>Спробуйте ще раз.
@@ -83,8 +69,7 @@
       </div>
     </template>
 
-    <!-- Змінюйте tryGetWeather для тестування -->
-    <template v-else>
+    <template v-if="!errorMessage && !weatherData">
       <div class="col text-center text-white custom-font">
         <div class="col text-h2 text-white custom-font text-weight-thin">
           Прогноз<br>Погоди
@@ -108,8 +93,7 @@
   name: 'IndexPage',
     data() {
       return{
-        search:'',
-        city: "Dnipro",
+        city: null,
         weatherData: null,
         forecastData: null,
         apiKey: 'dd76f1d7c2c54c9250d0de544316dcca',
@@ -124,18 +108,27 @@
           "13": { day: "https://cdn-icons-png.flaticon.com/128/2315/2315309.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163642.png" },
           "50": { day: "https://cdn-icons-png.flaticon.com/128/2930/2930095.png", night: "https://cdn-icons-png.flaticon.com/128/2930/2930127.png" }
         },
-        tryGetWeather: true
+        errorMessage: null
       }
     },
 
 
     methods: {
+      searchWeather() {
+        this.getTodayWeatherByCity()
+        this.getForecastByCity()
+      },
+
       getTodayWeatherByCity() {
         this.$axios(
           `https://api.openweathermap.org/data/2.5/weather?q=${ this.city }&appid=${ this.apiKey }&units=metric&lang=ua`
         ).then(response => {
           console.log("response: ", response)
           this.weatherData = response.data
+          this.errorMessage = null
+        }).catch((error) => {
+          this.weatherData = null
+          this.errorMessage = error
         })
       },
 
@@ -145,28 +138,34 @@
         ).then(response => {
           console.log("forecast: ", response)
 
-          let dataList = []
+          let dataList = {}
           for (let i = 0; i < response.data.cnt; i++) {
-            if (!(i % 8)) {
-              dataList[Math.floor(i / 8)] = []
+            let date = new Date(response.data.list[i].dt * 1000).toLocaleDateString()
+            if (!dataList[date]) {
+              dataList[date] = []
             }
-            dataList[Math.floor(i / 8)][i % 8] = response.data.list[i]
+            dataList[date].push({
+              temp_min: response.data.list[i].main.temp_min,
+              temp_max: response.data.list[i].main.temp_max,
+              icon: response.data.list[i].weather[0].icon
+            })
           }
+          console.log("dataList:", dataList)
 
           let resultList = []
-          dataList.forEach((element, index) => {
+          let index = 0
+          for (let date in dataList) {
             let dayData = {}
             let iconCount = {}
-            let date = new Date(element[0].dt * 1000)
-            dayData.date = date.toLocaleDateString()
-            element.forEach((element) => {
-              if (!dayData.temp_min || dayData.temp_min > element.main.temp_min) {
-                dayData.temp_min = element.main.temp_min
+            dayData.date = date
+            dataList[date].forEach((element) => {
+              if (!dayData.temp_min || dayData.temp_min > element.temp_min) {
+                dayData.temp_min = element.temp_min
               }
-              if (!dayData.temp_max || dayData.temp_max < element.main.temp_max) {
-                dayData.temp_max = element.main.temp_max
+              if (!dayData.temp_max || dayData.temp_max < element.temp_max) {
+                dayData.temp_max = element.temp_max
               }
-              let icon = element.weather[0].icon.substr(0, 2)
+              let icon = element.icon.substr(0, 2)
               if (!iconCount[icon]) {
                 iconCount[icon] = 1
               }
@@ -174,6 +173,7 @@
                 iconCount[icon]++
               }
             })
+
             let max = 0
             for (let key in iconCount) {
               if (iconCount[key] > max) {
@@ -181,18 +181,23 @@
                 dayData.icon = key + 'd'
               }
             }
+            
             dayData.temp_min = Math.floor(dayData.temp_min)
             dayData.temp_max = Math.ceil(dayData.temp_max)
             resultList[index] = dayData
-          })
+            index++
+          }
 
           this.forecastData = resultList
+        }).catch((error) => {
+          this.forecastData = null
+          this.errorMessage = error
         })
       },
 
       getWeatherIconReplacer(original) {
         let c = this.weatherIcons[original.substr(0, 2)]
-        if (original.substr(2) == "d") {
+        if (original.endsWith('d')) {
           return c.day
         }
         else {
@@ -203,9 +208,8 @@
     
     
     mounted() {
-      if (this.tryGetWeather) {
-        this.getTodayWeatherByCity()
-        this.getForecastByCity()
+      if (this.city) {
+        this.searchWeather()
       }
     }
 });
@@ -214,8 +218,6 @@
 
 <style lang="scss" scoped>
 .weather-container {
-  width: 100%;
-  max-width: 1000px;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -246,7 +248,7 @@
   font-weight: 500; 
   color: #fff; 
   text-align: center; 
-  margin: 5px 0; 
+  margin: 5px 0;
 }
 
 .weather-icon img {
