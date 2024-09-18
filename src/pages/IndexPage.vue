@@ -17,22 +17,22 @@
 
     <template v-if="weatherData">
       <div class="col text-white text-center">
-        <div class="text-h2 text-weight-light custom-font">
+        <div class="text-h2 text-weight-light custom-font text-sha">
           <!-- Місто  -->
           {{ weatherData.name  }}
         </div>
 
-        <div class="text-h6 text-weight-light custom-font">
+        <div class="text-h4 text-weight-light custom-font text-sha">
           <!-- Погода -->
           {{ weatherData.weather[0].description.toUpperCase() }}
         </div>
 
-        <div class="text-h1 text-weight-thin custom-font q-my-lg relative-position">
+        <div class="text-h1 text-weight-thin custom-font q-my-lg relative-position text-sha">
           <span>
             <!-- Температура -->
             {{ Math.ceil(weatherData.main.temp) }}
           </span>
-          <span class="text-h4 relative-position degree" >&deg;C</span>
+          <span class="text-h4 relative-position degree text-sha" >&deg;C</span>
         </div>
       </div>
       
@@ -275,7 +275,7 @@
 .temp-low {
   // color: #00921d;
   // // opacity: 0.6;
-  color: #4589c5;
+  color: #ffffff;
   
 }
 
