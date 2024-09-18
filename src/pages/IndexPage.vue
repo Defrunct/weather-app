@@ -63,7 +63,7 @@
       <div v-if="forecastData" class="weather-container">
         <div v-for="(data, index) in forecastData" :key="index" class="weather-day">
           <div class="day">{{ data.date }}</div>
-          <div class="weather-icon">
+          <div class="weather-icon-t">
             <img :src="getWeatherIconReplacer(data.icon)" />
           </div>
           <div class="temperature">
@@ -250,8 +250,14 @@
 }
 
 .weather-icon img {
-  width: 40px;
-  height: 40px;
+  width: 170px;
+  height: 170px;
+  margin: 10px 0;
+}
+
+.weather-icon-t img {
+  width: 80px;
+  height: 80px;
   margin: 10px 0;
 }
 
