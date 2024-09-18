@@ -114,15 +114,15 @@
         forecastData: null,
         apiKey: 'dd76f1d7c2c54c9250d0de544316dcca',
         weatherIcons: {
-          "01": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png" },
-          "02": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163672.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163672.png" },
-          "03": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163657.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163657.png" },
-          "04": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163660.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163660.png" },
-          "09": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163658.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163658.png" },
-          "10": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163661.png" },
-          "11": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163672.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163672.png" },
-          "13": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163657.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163657.png" },
-          "50": { day: "https://cdn-icons-png.flaticon.com/512/1163/1163660.png", night: "https://cdn-icons-png.flaticon.com/512/1163/1163660.png" }
+          "01": { day: "https://cdn-icons-png.flaticon.com/128/4814/4814268.png", night: "https://cdn-icons-png.flaticon.com/128/740/740878.png" },
+          "02": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146869.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163630.png" },
+          "03": { day: "https://cdn-icons-png.flaticon.com/128/414/414927.png", night: "https://cdn-icons-png.flaticon.com/128/414/414927.png" },
+          "04": { day: "https://cdn-icons-png.flaticon.com/128/9755/9755232.png", night: "https://cdn-icons-png.flaticon.com/128/9755/9755232.png" },
+          "09": { day: "https://cdn-icons-png.flaticon.com/128/15621/15621965.png", night: "https://cdn-icons-png.flaticon.com/128/9755/9755258.png" },
+          "10": { day: "https://cdn-icons-png.flaticon.com/128/414/414966.png", night: "https://cdn-icons-png.flaticon.com/128/414/414966.png" },
+          "11": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146860.png", night: "https://cdn-icons-png.flaticon.com/128/1146/1146860.png" },
+          "13": { day: "https://cdn-icons-png.flaticon.com/128/2315/2315309.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163642.png" },
+          "50": { day: "https://cdn-icons-png.flaticon.com/128/2930/2930095.png", night: "https://cdn-icons-png.flaticon.com/128/2930/2930127.png" }
         },
         tryGetWeather: true
       }
