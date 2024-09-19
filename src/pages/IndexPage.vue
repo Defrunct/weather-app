@@ -63,7 +63,7 @@
 
     <template v-if="errorMessage">
       <div class="col text-center text-white custom-font">
-        <div class="col text-h2 text-white custom-font text-weight-thin">
+        <div class="col text-h2 text-white custom-font text-weight-thin text-sha">
           Місто не знайдено. <br>Спробуйте ще раз.
         </div>
       </div>
@@ -71,7 +71,7 @@
 
     <template v-if="!errorMessage && !weatherData">
       <div class="col text-center text-white custom-font">
-        <div class="col text-h2 text-white custom-font text-weight-thin">
+        <div class="col text-h2 text-white custom-font text-weight-thin text-sha">
           Прогноз<br>Погоди
         </div>
         
