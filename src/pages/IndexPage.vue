@@ -150,6 +150,7 @@
               icon: response.data.list[i].weather[0].icon
             })
           }
+          delete dataList[new Date().toLocaleDateString()]
           console.log("dataList:", dataList)
 
           let resultList = []
