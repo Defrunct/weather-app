@@ -17,10 +17,19 @@
 
     <template v-if="weatherData">
       <div class="col text-white text-center">
-        <div class="text-h2 text-weight-light custom-font text-sha">
-          <!-- Місто  -->
-          {{ weatherData.name  }}
+        <div class="text-h2 text-weight-light custom-font text-sha d-flex justify-center items-center">
+        <!-- Місто  -->
+        <span>{{ weatherData.name }}</span>
+        <!-- при натиску зміити на   icon="favorite" -->
+          <q-btn
+          size="lg"
+          round
+          icon="favorite_border"  
+          color="primary"
+          class="q-ml-md"
+        />
         </div>
+
 
         <div class="text-h4 text-weight-light custom-font text-sha">
           <!-- Погода -->
@@ -83,6 +92,8 @@
         />
       </div>
     </template>
+
+
 
   </q-page>
 </template>
