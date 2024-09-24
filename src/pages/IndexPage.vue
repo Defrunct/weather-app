@@ -16,6 +16,18 @@
     </div>
 
     <template v-if="weatherData">
+
+      <div class="col text-white text-right custom-font text-sha">
+          <q-btn
+            size="lg"
+            flat
+            icon="favorite"
+            color=""
+            label="Збережене"
+            class="text-white text-right custom-font text-sha"
+          />
+        </div>
+
       <div class="col text-white text-center">
         <div class="text-h2 text-weight-light custom-font text-sha d-flex justify-center items-center">
         <!-- Місто  -->
@@ -29,7 +41,6 @@
           class="q-ml-md"
         />
         </div>
-
 
         <div class="text-h4 text-weight-light custom-font text-sha">
           <!-- Погода -->
