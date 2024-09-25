@@ -2,7 +2,7 @@
   <q-page class="flex column">
 
     <div class="col q-pt-lg q-px-md">
-      <q-input filled bottom-slots v-model="city" label="Місто" @keydown.enter="searchWeather">
+      <q-input filled bottom-slots v-model="this.store.currentCityName" label="Місто" @keydown.enter="searchWeather">
 
         <template v-slot:before>
           <q-icon name="my_location"/>
@@ -18,15 +18,16 @@
     <template v-if="weatherData">
 <!-- Тиць тиць on the button and go to favorites -->
       <div class="col text-white text-right custom-font text-sha">
-          <q-btn
-            size="lg"
-            flat
-            icon="favorite"
-            color=""
-            label="Збережене"
-            class="text-white text-right custom-font text-sha"
-          />
-        </div>
+        <q-btn
+          size="lg"
+          flat
+          icon="favorite"
+          color=""
+          label="Збережене"
+          class="text-white text-right custom-font text-sha"
+          to="/favorite"
+        />
+      </div>
 
       <div class="col text-white text-center">
         <div class="text-h2 text-weight-light custom-font text-sha d-flex justify-center items-center">
@@ -102,143 +103,145 @@
         />
       </div>
     </template>
-
-<!-- Add normal if.   -->
     
-
-    
-
   </q-page>
 </template>
 
-<script setup>
+<script>
+import { crossPageData } from 'stores/crossPageData';
 
-  defineOptions({
+export default {
   name: 'IndexPage',
-    data() {
-      return{
-        city: null,
-        weatherData: null,
-        forecastData: null,
-        apiKey: 'dd76f1d7c2c54c9250d0de544316dcca',
-        weatherIcons: {
-          "01": { day: "https://cdn-icons-png.flaticon.com/128/4814/4814268.png", night: "https://cdn-icons-png.flaticon.com/128/740/740878.png" },
-          "02": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146869.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163630.png" },
-          "03": { day: "https://cdn-icons-png.flaticon.com/128/414/414927.png", night: "https://cdn-icons-png.flaticon.com/128/414/414927.png" },
-          "04": { day: "https://cdn-icons-png.flaticon.com/128/9755/9755232.png", night: "https://cdn-icons-png.flaticon.com/128/9755/9755232.png" },
-          "09": { day: "https://cdn-icons-png.flaticon.com/128/15621/15621965.png", night: "https://cdn-icons-png.flaticon.com/128/9755/9755258.png" },
-          "10": { day: "https://cdn-icons-png.flaticon.com/128/414/414966.png", night: "https://cdn-icons-png.flaticon.com/128/414/414966.png" },
-          "11": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146860.png", night: "https://cdn-icons-png.flaticon.com/128/1146/1146860.png" },
-          "13": { day: "https://cdn-icons-png.flaticon.com/128/2315/2315309.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163642.png" },
-          "50": { day: "https://cdn-icons-png.flaticon.com/128/2930/2930095.png", night: "https://cdn-icons-png.flaticon.com/128/2930/2930127.png" }
-        },
-        errorMessage: null
-      }
+
+  setup() {
+    const store = crossPageData()
+
+    return {
+      store
+    }
+  },
+
+  data() {
+    return {
+      weatherData: null,
+      forecastData: null,
+      apiKey: 'dd76f1d7c2c54c9250d0de544316dcca',
+      weatherIcons: {
+        "01": { day: "https://cdn-icons-png.flaticon.com/128/4814/4814268.png", night: "https://cdn-icons-png.flaticon.com/128/740/740878.png" },
+        "02": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146869.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163630.png" },
+        "03": { day: "https://cdn-icons-png.flaticon.com/128/414/414927.png", night: "https://cdn-icons-png.flaticon.com/128/414/414927.png" },
+        "04": { day: "https://cdn-icons-png.flaticon.com/128/9755/9755232.png", night: "https://cdn-icons-png.flaticon.com/128/9755/9755232.png" },
+        "09": { day: "https://cdn-icons-png.flaticon.com/128/15621/15621965.png", night: "https://cdn-icons-png.flaticon.com/128/9755/9755258.png" },
+        "10": { day: "https://cdn-icons-png.flaticon.com/128/414/414966.png", night: "https://cdn-icons-png.flaticon.com/128/414/414966.png" },
+        "11": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146860.png", night: "https://cdn-icons-png.flaticon.com/128/1146/1146860.png" },
+        "13": { day: "https://cdn-icons-png.flaticon.com/128/2315/2315309.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163642.png" },
+        "50": { day: "https://cdn-icons-png.flaticon.com/128/2930/2930095.png", night: "https://cdn-icons-png.flaticon.com/128/2930/2930127.png" }
+      },
+      errorMessage: null
+    }
+  },
+
+  mounted() {
+    if (this.store.currentCityName) {
+      this.searchWeather()
+    }
+  },
+
+  
+  methods: {
+    searchWeather() {
+      this.getTodayWeatherByCity()
+      this.getForecastByCity()
     },
 
-
-    methods: {
-      searchWeather() {
-        this.getTodayWeatherByCity()
-        this.getForecastByCity()
-      },
-
-      getTodayWeatherByCity() {
-        this.$axios(
-          `https://api.openweathermap.org/data/2.5/weather?q=${ this.city }&appid=${ this.apiKey }&units=metric&lang=ua`
-        ).then(response => {
-          console.log("response: ", response)
-          this.weatherData = response.data
-          this.errorMessage = null
-        }).catch((error) => {
-          this.weatherData = null
-          this.errorMessage = error
-        })
-      },
-
-      getForecastByCity() {
-        this.$axios(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${ this.city }&appid=${ this.apiKey }&units=metric&lang=ua`
-        ).then(response => {
-          console.log("forecast: ", response)
-
-          let dataList = {}
-          for (let i = 0; i < response.data.cnt; i++) {
-            let date = new Date(response.data.list[i].dt * 1000).toLocaleDateString()
-            if (!dataList[date]) {
-              dataList[date] = []
-            }
-            dataList[date].push({
-              temp_min: response.data.list[i].main.temp_min,
-              temp_max: response.data.list[i].main.temp_max,
-              icon: response.data.list[i].weather[0].icon
-            })
-          }
-          delete dataList[new Date().toLocaleDateString()]
-          console.log("dataList:", dataList)
-
-          let resultList = []
-          let index = 0
-          for (let date in dataList) {
-            let dayData = {}
-            let iconCount = {}
-            dayData.date = date
-            dataList[date].forEach((element) => {
-              if (!dayData.temp_min || dayData.temp_min > element.temp_min) {
-                dayData.temp_min = element.temp_min
-              }
-              if (!dayData.temp_max || dayData.temp_max < element.temp_max) {
-                dayData.temp_max = element.temp_max
-              }
-              let icon = element.icon.substr(0, 2)
-              if (!iconCount[icon]) {
-                iconCount[icon] = 1
-              }
-              else {
-                iconCount[icon]++
-              }
-            })
-
-            let max = 0
-            for (let key in iconCount) {
-              if (iconCount[key] > max) {
-                max = iconCount[key]
-                dayData.icon = key + 'd'
-              }
-            }
-            
-            dayData.temp_min = Math.floor(dayData.temp_min)
-            dayData.temp_max = Math.ceil(dayData.temp_max)
-            resultList[index] = dayData
-            index++
-          }
-
-          this.forecastData = resultList
-        }).catch((error) => {
-          this.forecastData = null
-          this.errorMessage = error
-        })
-      },
-
-      getWeatherIconReplacer(original) {
-        let c = this.weatherIcons[original.substr(0, 2)]
-        if (original.endsWith('d')) {
-          return c.day
-        }
-        else {
-          return c.night
-        }
-      }
+    getTodayWeatherByCity() {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/weather?q=${ this.store.currentCityName }&appid=${ this.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        console.log("response: ", response)
+        this.weatherData = response.data
+        this.errorMessage = null
+      }).catch((error) => {
+        this.weatherData = null
+        this.errorMessage = error
+      })
     },
-    
-    
-    mounted() {
-      if (this.city) {
-        this.searchWeather()
+
+    getForecastByCity() {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${ this.store.currentCityName }&appid=${ this.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        console.log("forecast: ", response)
+
+        let dataList = {}
+        for (let i = 0; i < response.data.cnt; i++) {
+          let date = new Date(response.data.list[i].dt * 1000).toLocaleDateString()
+          if (!dataList[date]) {
+            dataList[date] = []
+          }
+          dataList[date].push({
+            temp_min: response.data.list[i].main.temp_min,
+            temp_max: response.data.list[i].main.temp_max,
+            icon: response.data.list[i].weather[0].icon
+          })
+        }
+        delete dataList[new Date().toLocaleDateString()]
+        console.log("dataList:", dataList)
+
+        let resultList = []
+        let index = 0
+        for (let date in dataList) {
+          let dayData = {}
+          let iconCount = {}
+          dayData.date = date
+          dataList[date].forEach((element) => {
+            if (!dayData.temp_min || dayData.temp_min > element.temp_min) {
+              dayData.temp_min = element.temp_min
+            }
+            if (!dayData.temp_max || dayData.temp_max < element.temp_max) {
+              dayData.temp_max = element.temp_max
+            }
+            let icon = element.icon.substr(0, 2)
+            if (!iconCount[icon]) {
+              iconCount[icon] = 1
+            }
+            else {
+              iconCount[icon]++
+            }
+          })
+
+          let max = 0
+          for (let key in iconCount) {
+            if (iconCount[key] > max) {
+              max = iconCount[key]
+              dayData.icon = key + 'd'
+            }
+          }
+          
+          dayData.temp_min = Math.floor(dayData.temp_min)
+          dayData.temp_max = Math.ceil(dayData.temp_max)
+          resultList[index] = dayData
+          index++
+        }
+
+        this.forecastData = resultList
+      }).catch((error) => {
+        this.forecastData = null
+        this.errorMessage = error
+      })
+    },
+
+    getWeatherIconReplacer(original) {
+      let c = this.weatherIcons[original.substr(0, 2)]
+      if (original.endsWith('d')) {
+        return c.day
+      }
+      else {
+        return c.night
       }
     }
-});
-
+  }
+}
 </script>
 
 <style lang="scss" scoped>
