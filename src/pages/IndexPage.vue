@@ -104,72 +104,7 @@
     </template>
 
 <!-- Add normal if.   -->
-    <template v-if="favorites">
-      
-      <div class="col text-center text-white custom-font">
-        <div class="col text-h2 text-white custom-font text-weight-thin text-sha">
-          Збережене
-        </div>
-      </div>
-<!-- Add for. A made just stable schit -->
-      <div class="q-pa-md"> 
-        <div class="weather-container row q-my-md q-px-md q-py-sm q-gutter-md justify-between items-center rounded-borders">
-          <div class="col text-left">
-            <div class="text-h3 text-weight-light custom-font text-white">
-            Відень
-            </div>
-          </div>
-
-          <div class="col text-center">
-            <div class="text-h3 text-weight-light custom-font text-white">
-               Дощ
-            </div>
-          </div>
-
-          <div class="col text-center">
-            <div class="text-h1 text-white custom-font">
-              22&deg;C
-            </div>
-          </div>
-
-          <div class="weather-icon">
-            <!-- <img :src="getWeatherIconReplacer(weatherData.weather[0].icon)" /> -->
-            <img src="https://cdn-icons-png.flaticon.com/128/4814/4814268.png" />
-          </div>
-
-        
-        </div>
-      </div>
-      
-      <!-- Remove this crutch -->
-      <div class="q-pa-md"> 
-        <div class="weather-container row q-my-md q-px-md q-py-sm q-gutter-md justify-between items-center rounded-borders">
-          <div class="col text-left">
-            <div class="text-h3 text-weight-light custom-font text-white">
-            Десь
-            </div>
-          </div>
-
-          <div class="col text-center">
-            <div class="text-h3 text-weight-light custom-font text-white">
-               Щось
-            </div>
-          </div>
-
-          <div class="col text-center">
-            <div class="text-h1 text-white custom-font">
-              2&deg;C
-            </div>
-          </div>
-
-          <div class="weather-icon">
-            <!-- <img :src="getWeatherIconReplacer(weatherData.weather[0].icon)" /> -->
-            <img src="https://cdn-icons-png.flaticon.com/128/9755/9755232.png" />
-          </div>
-          
-        </div>
-      </div>
-    </template>
+    
 
     
 
