@@ -79,6 +79,33 @@
           </div>
         </div>
       </div>
+
+
+      <div class="weather-map">
+        <img src="https://via.placeholder.com/300x300.png?text=Weather+Map" alt="Weather Map">
+      </div>
+
+      
+      <div class="row q-my-md q-gutter-lg justify-around">
+      
+      <!-- Индекс УФ -->
+      <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
+        <div class="text-h6">Індекс УФ</div>
+        <div class="text-h2">0</div>
+        <div class="text-subtitle1">Низький</div>
+        <div class="text-caption">Низький до кінця дня.</div>
+      </div>
+
+      <!-- Схід Сонця -->
+      <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
+        <div class="text-h6">Схід сонця</div>
+        <div class="text-h2">06:54</div>
+        <div class="text-subtitle1">Захід сонця: 18:33</div>
+      </div>
+      
+    </div>
+
+
     </template>
 
     <template v-if="errorMessage">
@@ -310,4 +337,33 @@ export default {
 }
 
 
+.weather-map {
+  background-color: rgba(255, 255, 255, 0.2); 
+  border-radius: 20px; 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+  padding: 0; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px); 
+  margin: 0 auto;
+  margin-bottom: 20px;
+  width: 400px; 
+  height: 350px; 
+  overflow: hidden; 
+}
+
+.weather-map img {
+  width: 350px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 20px; 
+}
+
+.info-box {
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.2); 
+  border-radius: 20px; 
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+}
 </style>

@@ -1,12 +1,27 @@
 <template>
   <q-page class="flex column">
-    <div class="col text-center text-white custom-font">
-      <div class="col text-h2 text-white custom-font text-weight-thin text-sha">
+    
+    <div class="col q-pt-lg q-px-md">
+      <q-input filled bottom-slots label="Місто">
+
+        <template v-slot:before>
+          <q-icon name="my_location"/>
+        </template>
+        
+        <template v-slot:append>
+          <q-btn round dense flat icon="search"/>
+        </template>
+        
+      </q-input>
+    </div>
+
+    <div class="col text-white text-center">
+      <div class="text-h2 text-weight-light custom-font text-sha d-flex justify-center items-center">
         Збережене
       </div>
       <div class="col text-white text-right custom-font text-sha">
         <q-btn
-          size="lg"
+          size="lg" 
           flat
           icon="favorite"
           color=""
@@ -79,11 +94,15 @@
 </template>
 
 <script>
+
 export default {
   name: 'FavoritePage',
   data() {
-    return {}
-  }
+    return {
+     
+    }
+  },
+
 }
 </script>
 
@@ -146,3 +165,7 @@ export default {
   opacity: 0.6;
 }
 </style>
+
+
+
+
