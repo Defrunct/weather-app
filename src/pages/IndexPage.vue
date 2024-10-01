@@ -37,10 +37,11 @@
           <q-btn
           size="lg"
           round
-          icon="favorite_border"  
+          :icon="favorite[this.store.currentCityName] ? 'favorite' : 'favorite_border'"
           color="primary"
           class="q-ml-md"
-        />
+          @click="favorite[this.store.currentCityName] ? removeFavorite(this.store.currentCityName) : addFavorite(this.store.currentCityName)"
+          />
         </div>
 
         <div class="text-h4 text-weight-light custom-font text-sha">
@@ -152,7 +153,6 @@ export default {
     return {
       weatherData: null,
       forecastData: null,
-      apiKey: 'dd76f1d7c2c54c9250d0de544316dcca',
       weatherIcons: {
         "01": { day: "https://cdn-icons-png.flaticon.com/128/4814/4814268.png", night: "https://cdn-icons-png.flaticon.com/128/740/740878.png" },
         "02": { day: "https://cdn-icons-png.flaticon.com/128/1146/1146869.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163630.png" },
@@ -164,7 +164,8 @@ export default {
         "13": { day: "https://cdn-icons-png.flaticon.com/128/2315/2315309.png", night: "https://cdn-icons-png.flaticon.com/128/1163/1163642.png" },
         "50": { day: "https://cdn-icons-png.flaticon.com/128/2930/2930095.png", night: "https://cdn-icons-png.flaticon.com/128/2930/2930127.png" }
       },
-      errorMessage: null
+      errorMessage: null,
+      favorite: {}
     }
   },
 
@@ -172,10 +173,27 @@ export default {
     if (this.store.currentCityName) {
       this.searchWeather()
     }
+    if (localStorage.favorite) {
+      try {
+        this.favorite = JSON.parse(localStorage.getItem('favorite'))
+      } catch(e) {
+        localStorage.removeItem('favorite')
+      }
+    }
   },
 
   
   methods: {
+    addFavorite(city) {
+      this.favorite[city] = true
+      localStorage.setItem('favorite', JSON.stringify(this.favorite))
+    },
+
+    removeFavorite(city) {
+      delete this.favorite[city]
+      localStorage.setItem('favorite', JSON.stringify(this.favorite))
+    },
+
     searchWeather() {
       this.getTodayWeatherByCity()
       this.getForecastByCity()
@@ -183,11 +201,12 @@ export default {
 
     getTodayWeatherByCity() {
       this.$axios(
-        `https://api.openweathermap.org/data/2.5/weather?q=${ this.store.currentCityName }&appid=${ this.apiKey }&units=metric&lang=ua`
+        `https://api.openweathermap.org/data/2.5/weather?q=${ this.store.currentCityName }&appid=${ this.store.apiKey }&units=metric&lang=ua`
       ).then(response => {
         console.log("response: ", response)
         this.weatherData = response.data
-        this.errorMessage = null
+        this.errorMessage = null,
+        this.store.currentCityName = response.data.name
       }).catch((error) => {
         this.weatherData = null
         this.errorMessage = error
@@ -196,7 +215,7 @@ export default {
 
     getForecastByCity() {
       this.$axios(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${ this.store.currentCityName }&appid=${ this.apiKey }&units=metric&lang=ua`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${ this.store.currentCityName }&appid=${ this.store.apiKey }&units=metric&lang=ua`
       ).then(response => {
         console.log("forecast: ", response)
 
