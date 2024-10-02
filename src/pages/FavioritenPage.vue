@@ -1,39 +1,45 @@
 <template>
   <q-page class="flex column">
     
-    <div class="col q-pt-lg q-px-md">
-      <q-input filled bottom-slots label="Місто">
+    <div class="q-pt-lg q-px-md q-ma-0">
+      <q-input filled bottom-slots  label="Місто" >
 
         <template v-slot:before>
           <q-icon name="my_location"/>
         </template>
         
         <template v-slot:append>
-          <q-btn round dense flat icon="search"/>
+          <q-btn round dense flat icon="search"  />
         </template>
         
       </q-input>
     </div>
 
-    <div class="col text-white text-center">
-      <div class="col text-white text-right custom-font text-sha">
+    <div class="row q-mt-md q-px-md justify-between items-center">
+      <div class="col text-center">
+        <div class="text-h2 text-weight-light text-white custom-font text-sha">
+          Збережене
+        </div>
+      </div>
+      
+      <div class="col-auto">
         <q-btn
           size="lg" 
           flat
           icon="favorite"
-          color=""
+          color="primary"
           label="Головна"
-          class="text-white text-right custom-font text-sha"
+          class="text-white custom-font text-sha"
           to="/"
         />
       </div>
-      <div class="text-h2 text-weight-light custom-font text-sha d-flex justify-center items-center">
-        Збережене
-      </div>
     </div>
+     
+   
 
     <!-- Add for. A made just stable schit -->
-    <div v-for="(data) in Object.keys(weatherData).sort()" :key="data" class="q-pa-md">
+     
+    <div v-for="(data) in Object.keys(weatherData).sort()" :key="data" class="q-pa-md ">
       <div class="weather-container row q-my-md q-px-md q-py-sm q-gutter-md justify-between items-center rounded-borders">
 
         <div class="col text-left">
@@ -179,21 +185,9 @@ export default {
   margin: 10px 0;
 }
 
-.temperature {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.temp-high {
-  color: #ff3b30;
-  font-weight: 500;
-}
 
-.temp-low {
-  color: #f5f5f7;
-  opacity: 0.6;
-}
+
 </style>
 
 
