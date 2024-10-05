@@ -5,7 +5,7 @@
       <q-input filled bottom-slots v-model="this.store.currentCityName" label="Місто" @keydown.enter="searchWeather">
 
         <template v-slot:before>
-          <q-icon name="my_location"/>
+          <q-btn round dense flat icon="my_location" @click="getCoordsAndUpdate"/>
         </template>
         
         <template v-slot:append>
@@ -128,6 +128,7 @@
           round
           color=""
           icon="map"
+          @click="getCoordsAndUpdate()"
         />
       </div>
     </template>
@@ -199,13 +200,51 @@ export default {
       this.getForecastByCity()
     },
 
+    getCoordsAndUpdate() {
+      let lat, lon
+      if (this.$q.platform.is.electron) {
+        this.$axios(
+          `https://api.ipbase.com/v1/json/`
+        ).then(response => {
+          console.log("position: ", response)
+          lat = response.data.latitude
+          lon = response.data.longitude
+        }).then(() => {
+          this.getTodayWeatherByCoords(lat, lon)
+        })
+      }
+      else {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log("position: ", position)
+          lat = position.coords.latitude
+          lon = position.coords.longitude
+          this.getTodayWeatherByCoords(lat, lon)
+        })
+      }
+    },
+
+    getTodayWeatherByCoords(lat, lon) {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${ lat }&lon=${ lon }&appid=${ this.store.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        console.log("response: ", response)
+        this.weatherData = response.data
+        this.errorMessage = null
+        this.store.currentCityName = response.data.name
+        this.getForecastByCity()
+      }).catch((error) => {
+        this.weatherData = null
+        this.errorMessage = error
+      })
+    },
+
     getTodayWeatherByCity() {
       this.$axios(
         `https://api.openweathermap.org/data/2.5/weather?q=${ this.store.currentCityName }&appid=${ this.store.apiKey }&units=metric&lang=ua`
       ).then(response => {
         console.log("response: ", response)
         this.weatherData = response.data
-        this.errorMessage = null,
+        this.errorMessage = null
         this.store.currentCityName = response.data.name
       }).catch((error) => {
         this.weatherData = null
