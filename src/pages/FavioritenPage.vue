@@ -2,14 +2,14 @@
   <q-page class="flex column">
     
     <div class="q-pt-lg q-px-md q-ma-0">
-      <q-input filled bottom-slots  label="Місто" >
+      <q-input filled bottom-slots v-model="this.store.currentCityName" label="Місто" @keydown.enter="$router.push('/')">
 
         <template v-slot:before>
-          <q-icon name="my_location"/>
+          <q-btn round dense flat icon="my_location" @click="getCoordsAndUpdate"/>
         </template>
         
         <template v-slot:append>
-          <q-btn round dense flat icon="search"  />
+          <q-btn round dense flat icon="search" to="/"/>
         </template>
         
       </q-input>
@@ -118,6 +118,38 @@ export default {
 
 
   methods: {
+    getCoordsAndUpdate() {
+      let lat, lon
+      if (this.$q.platform.is.electron) {
+        this.$axios(
+          `https://api.ipbase.com/v1/json/`
+        ).then(response => {
+          console.log("position: ", response)
+          lat = response.data.latitude
+          lon = response.data.longitude
+        }).then(() => {
+          this.getCityFromCoords(lat, lon)
+        })
+      }
+      else {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log("position: ", position)
+          lat = position.coords.latitude
+          lon = position.coords.longitude
+          this.getCityFromCoords(lat, lon)
+        })
+      }
+    },
+
+    getCityFromCoords(lat, lon) {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${ lat }&lon=${ lon }&appid=${ this.store.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        this.store.currentCityName = response.data.name
+        this.$router.push('/')
+      })
+    },
+
     getTodayWeatherByCity(city) {
       this.$axios(
         `https://api.openweathermap.org/data/2.5/weather?q=${ city }&appid=${ this.store.apiKey }&units=metric&lang=ua`
