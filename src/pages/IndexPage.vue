@@ -83,28 +83,30 @@
 
 
       <div class="weather-map">
-        <img src="https://via.placeholder.com/300x300.png?text=Weather+Map" alt="Weather Map">
+        <!-- <img src="https://via.placeholder.com/300x300.png?text=Weather+Map" alt="Weather Map"> -->
+        <img src="weather-map.jpg" alt="Weather Map">
+
+
       </div>
 
       
       <div class="row q-my-md q-gutter-lg justify-around">
-      
-      <!-- Индекс УФ -->
-      <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
-        <div class="text-h6">Індекс УФ</div>
-        <div class="text-h2">0</div>
-        <div class="text-subtitle1">Низький</div>
-        <div class="text-caption">Низький до кінця дня.</div>
-      </div>
+        <!-- Индекс УФ -->
+        <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
+          <div class="text-h6">
+            <q-icon name="device_thermostat" />Відчуття як
+          </div>
+          <div class="text-h2">12°</div>
+          <div class="text-subtitle1">Через вітер погода видається прохолоднішою.</div>
+        </div>
 
-      <!-- Схід Сонця -->
-      <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
-        <div class="text-h6">Схід сонця</div>
-        <div class="text-h2">06:54</div>
-        <div class="text-subtitle1">Захід сонця: 18:33</div>
+        <!-- Схід Сонця -->
+        <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
+          <div class="text-h6">Схід сонця</div>
+          <div class="text-h2">07:02</div>
+          <div class="text-subtitle1">Захід сонця: 18:22</div>
+        </div>
       </div>
-      
-    </div>
 
 
     </template>
