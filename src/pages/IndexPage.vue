@@ -84,7 +84,7 @@
 
       <div class="weather-map">
         <!-- <img src="https://via.placeholder.com/300x300.png?text=Weather+Map" alt="Weather Map"> -->
-        <img src="weather-map.jpg" alt="Weather Map">
+        <img src="src\pages\weather-map.jpg" alt="Weather Map">
 
 
       </div>
