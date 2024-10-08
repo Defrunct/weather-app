@@ -1,6 +1,5 @@
 <template>
   <q-page class="flex column">
-
     <div class="col q-pt-lg q-px-md">
       <q-input filled bottom-slots v-model="this.store.currentCityName" label="Місто" @keydown.enter="searchWeather">
 
@@ -82,11 +81,8 @@
       </div>
 
 
-      <div class="weather-map">
+      <div id="weather-map" class="weather-map">
         <!-- <img src="https://via.placeholder.com/300x300.png?text=Weather+Map" alt="Weather Map"> -->
-        <img src="src\pages\weather-map.jpg" alt="Weather Map">
-
-
       </div>
 
       
@@ -94,17 +90,17 @@
         <!-- Индекс УФ -->
         <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
           <div class="text-h6">
-            <q-icon name="device_thermostat" />Відчуття як
+            <q-icon name="device_thermostat" />Відчувається як
           </div>
-          <div class="text-h2">12°</div>
+          <div class="text-h2">{{ Math.ceil(weatherData.main.feels_like) }}°</div>
           <div class="text-subtitle1">Через вітер погода видається прохолоднішою.</div>
         </div>
 
         <!-- Схід Сонця -->
         <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
           <div class="text-h6">Схід сонця</div>
-          <div class="text-h2">07:02</div>
-          <div class="text-subtitle1">Захід сонця: 18:22</div>
+          <div class="text-h2">{{ new Date(weatherData.sys.sunrise * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }}</div>
+          <div class="text-subtitle1">Захід сонця: {{ new Date(weatherData.sys.sunset * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }}</div>
         </div>
       </div>
 
@@ -173,6 +169,15 @@ export default {
   },
 
   mounted() {
+    if (!document.getElementById("google-map-script")) {
+      let script = document.createElement("script")
+      script.id = "google-map-script"
+      script.src = "https://maps.googleapis.com/maps/api/js?loading=async"
+      script.type = "text/javascript"
+      script.toggleAttribute("async", true)
+      document.head.appendChild(script)
+    }
+
     if (this.store.currentCityName) {
       this.searchWeather()
     }
@@ -234,9 +239,11 @@ export default {
         this.errorMessage = null
         this.store.currentCityName = response.data.name
         this.getForecastByCity()
+        this.updateMap()
       }).catch((error) => {
         this.weatherData = null
         this.errorMessage = error
+        console.log(error)
       })
     },
 
@@ -248,9 +255,11 @@ export default {
         this.weatherData = response.data
         this.errorMessage = null
         this.store.currentCityName = response.data.name
+        this.updateMap()
       }).catch((error) => {
         this.weatherData = null
         this.errorMessage = error
+        console.log(error)
       })
     },
 
@@ -326,6 +335,35 @@ export default {
       else {
         return c.night
       }
+    },
+
+    updateMap() {
+      let obj = this
+      this.$nextTick(() => {
+        let map = new google.maps.Map(document.getElementById("weather-map"), {
+          center: {
+            lat: obj.weatherData.coord.lat,
+            lng: obj.weatherData.coord.lon
+          },
+          zoom: 6
+        })
+
+        let weatherOverlay = new google.maps.ImageMapType({
+          getTileUrl: function(coords, zoom) {
+            if (Math.min(coords.x, coords.y) < 0 || Math.max(coords.x, coords.y) > Math.pow(2, zoom) - 1) {
+              return null
+            }
+            return `https://tile.openweathermap.org/map/precipitation_new/${ zoom }/${ coords.x }/${ coords.y }.png?appid=${ obj.store.apiKey }`
+          },
+
+          tileSize: new google.maps.Size(256, 256),
+          minZoom: 0,
+          maxZoom: 9,
+          name: "weather"
+        })
+
+        map.overlayMapTypes.insertAt(0, weatherOverlay)
+      })
     }
   }
 }
