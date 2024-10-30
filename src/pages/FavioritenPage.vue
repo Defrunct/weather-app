@@ -1,30 +1,30 @@
 <template>
   <q-page class="flex column">
-    
+
     <div class="q-pt-lg q-px-md q-ma-0">
       <q-input filled bottom-slots v-model="this.store.currentCityName" label="Місто" @keydown.enter="$router.push('/')">
 
         <template v-slot:before>
           <q-btn round dense flat icon="my_location" @click="getCoordsAndUpdate"/>
         </template>
-        
+
         <template v-slot:append>
           <q-btn round dense flat icon="search" to="/"/>
         </template>
-        
+
       </q-input>
     </div>
 
-    <div class="row q-mt-md q-px-md justify-between items-center">
+    <div class="row q-mt-md q-px-md justify-between items-center scale">
       <div class="col text-center">
         <div class="text-h2 text-weight-light text-white custom-font text-sha">
           Збережене
         </div>
       </div>
-      
+
       <div class="col-auto">
         <q-btn
-          size="lg" 
+          size="lg"
           flat
           icon="favorite"
           color="primary"
@@ -34,36 +34,36 @@
         />
       </div>
     </div>
-     
-   
+
+
 
     <!-- Add for. A made just stable schit -->
-     
+
     <div v-for="(data) in Object.keys(weatherData).sort()" :key="data" class="q-pa-md ">
-      <div class="weather-container row q-my-md q-px-md q-py-sm q-gutter-md justify-between items-center rounded-borders">
+      <div class="weather-container row q-my-md q-px-md q-py-sm q-gutter-md justify-between items-center rounded-borders scale">
 
         <div class="col text-left">
           <div class="text-h3 text-weight-light custom-font text-white">
             {{ data }}
           </div>
         </div>
-        
+
         <div class="col text-center">
           <div class="text-h3 text-weight-light custom-font text-white">
             {{ weatherData[data].weather[0].description }}
           </div>
         </div>
-        
+
         <div class="col text-center">
           <div class="text-h1 text-white custom-font">
             {{ Math.ceil(weatherData[data].main.temp) }}&deg;C
           </div>
         </div>
-        
+
         <div class="weather-icon">
           <img :src="getWeatherIconReplacer(weatherData[data].weather[0].icon)" />
         </div>
-      
+
       </div>
     </div>
 
@@ -186,7 +186,7 @@ export default {
   justify-content: space-between;
   backdrop-filter: blur(10px);
   margin: 0 auto;
-  margin-bottom: 70px; 
+  margin-bottom: 70px;
 }
 
 .weather-day {
@@ -195,7 +195,7 @@ export default {
   align-items: center;
   padding: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.3);
-  margin-left: 10px; 
+  margin-left: 10px;
   box-sizing: border-box;
 }
 
@@ -204,11 +204,11 @@ export default {
 }
 
 .day {
-  font-size: 18px; 
-  font-weight: 500; 
-  color: #fff; 
-  text-align: center; 
-  margin: 5px 0; 
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
+  margin: 5px 0;
 }
 
 .weather-icon img {
@@ -217,7 +217,10 @@ export default {
   margin: 10px 0;
 }
 
-
+.scale {
+flex-direction: column;
+font-size: 7vh;
+}
 
 
 </style>

@@ -6,11 +6,11 @@
         <template v-slot:before>
           <q-btn round dense flat icon="my_location" @click="getCoordsAndUpdate"/>
         </template>
-        
+
         <template v-slot:append>
           <q-btn round dense flat icon="search" @click="searchWeather" />
         </template>
-        
+
       </q-input>
     </div>
 
@@ -32,7 +32,7 @@
         <div class="text-h2 text-weight-light custom-font text-sha d-flex justify-center items-center">
         <!-- Місто  -->
         <span>{{ weatherData.name }}</span>
-        <!-- при натиску зміити на icon="favorite" -->
+        <!-- при натиску змінити на icon="favorite" -->
           <q-btn
           size="lg"
           round
@@ -56,7 +56,7 @@
           <span class="text-h4 relative-position degree text-sha" >&deg;C</span>
         </div>
       </div>
-      
+
       <div class="col text-center">
         <!-- <img :src="`https://openweathermap.org/img/wn/10n@2x.png`" > -->
         <!-- <img :src="`https://openweathermap.org/img/wn/${ weatherData.weather[0].icon }@2x.png`" /> -->
@@ -85,9 +85,9 @@
         <!-- <img src="https://via.placeholder.com/300x300.png?text=Weather+Map" alt="Weather Map"> -->
       </div>
 
-      
-      <div class="row q-my-md q-gutter-lg justify-around">
-        <!-- Индекс УФ -->
+
+      <div class="row q-my-md q-gutter-lg justify-around ">
+        <!-- Індекс УФ -->
         <div class="info-box col-4 text-center text-white rounded-borders text-sha custom-font">
           <div class="text-h6">
             <q-icon name="device_thermostat" />Відчувається як
@@ -120,7 +120,7 @@
         <div class="col text-h2 text-white custom-font text-weight-thin text-sha">
           Прогноз<br>Погоди
         </div>
-        
+
         <q-btn
           size="35px"
           round
@@ -130,7 +130,7 @@
         />
       </div>
     </template>
-    
+
   </q-page>
 </template>
 
@@ -190,7 +190,7 @@ export default {
     }
   },
 
-  
+
   methods: {
     addFavorite(city) {
       this.favorite[city] = true
@@ -313,7 +313,7 @@ export default {
               dayData.icon = key + 'd'
             }
           }
-          
+
           dayData.temp_min = Math.floor(dayData.temp_min)
           dayData.temp_max = Math.ceil(dayData.temp_max)
           resultList[index] = dayData
@@ -372,6 +372,11 @@ export default {
 <style lang="scss" scoped>
 .weather-container {
   background-color: rgba(255, 255, 255, 0.2);
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: normal;
+justify-content: space-between;
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -379,16 +384,28 @@ export default {
   justify-content: space-between;
   backdrop-filter: blur(10px);
   margin: 0 auto;
-  margin-bottom: 70px; 
+  margin-bottom: 70px;
+}
+
+.q-my-md {
+        margin-top: 16px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: center;
+        align-items: center;
 }
 
 .weather-day {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   align-items: center;
   padding: 10px;
   border-right: 1px solid rgba(255, 255, 255, 0.3);
-  margin-left: 10px; 
+  margin-left: 10px;
   box-sizing: border-box;
 }
 
@@ -397,10 +414,10 @@ export default {
 }
 
 .day {
-  font-size: 18px; 
-  font-weight: 500; 
-  color: #fff; 
-  text-align: center; 
+  font-size: 2vh;
+  font-weight: 500;
+  color: #fff;
+  text-align: center;
   margin: 5px 0;
 }
 
@@ -420,6 +437,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 2vh;
 }
 
 .temp-high {
@@ -431,37 +449,58 @@ export default {
   // color: #00921d;
   // // opacity: 0.6;
   color: #ffffff;
-  
+
 }
 
 
 .weather-map {
-  background-color: rgba(255, 255, 255, 0.2); 
-  border-radius: 20px; 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
-  padding: 0; 
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
   margin: 0 auto;
   margin-bottom: 20px;
-  width: 400px; 
-  height: 350px; 
-  overflow: hidden; 
+  width: 400px;
+  height: 350px;
+  overflow: hidden;
 }
 
 .weather-map img {
   width: 350px;
   height: 250px;
   object-fit: cover;
-  border-radius: 20px; 
+  border-radius: 20px;
 }
 
 .info-box {
   padding: 16px;
-  background-color: rgba(255, 255, 255, 0.2); 
-  border-radius: 20px; 
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: min-content;
 }
+.text-h2 {
+    font-weight: 300;
+    line-height: 3.75rem;
+    font-size: 8vh;
+    letter-spacing: -0.00833em;
+    }
+    .text-h6 {
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 5vh;
+        letter-spacing: 0.0125em;
+        font-size: 3vh;
+    }
+    .text-subtitle1 {
+        font-size: 1rem;
+        font-weight: 400;
+        font-size: 2vh;
+        line-height: 3vh;
+        letter-spacing: 0.00937em;
+    }
 </style>
