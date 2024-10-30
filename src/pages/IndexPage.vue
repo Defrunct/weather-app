@@ -12,6 +12,15 @@
         </template>
 
       </q-input>
+        <template v-slot:before>
+          <q-btn round dense flat icon="my_location" @click="getCoordsAndUpdate"/>
+        </template>
+
+        <template v-slot:append>
+          <q-btn round dense flat icon="search" @click="searchWeather" />
+        </template>
+
+      </q-input>
     </div>
 
     <template v-if="weatherData">
@@ -108,6 +117,7 @@
     </template>
 
     <template v-if="errorMessage">
+    <template v-if="!errorMessage && !weatherData">
       <div class="col text-center text-white custom-font">
         <div class="col text-h2 text-white custom-font text-weight-thin text-sha">
           Місто не знайдено. <br>Спробуйте ще раз.
@@ -130,6 +140,7 @@
         />
       </div>
     </template>
+
 
   </q-page>
 </template>
@@ -210,7 +221,169 @@ export default {
     getCoordsAndUpdate() {
       let lat, lon
       if (this.$q.platform.is.electron) {
+  mounted() {
+    if (!document.getElementById("google-map-script")) {
+      let script = document.createElement("script")
+      script.id = "google-map-script"
+      script.src = "https://maps.googleapis.com/maps/api/js?loading=async"
+      script.type = "text/javascript"
+      script.toggleAttribute("async", true)
+      document.head.appendChild(script)
+    }
+
+    if (this.store.currentCityName) {
+      this.searchWeather()
+    }
+    if (localStorage.favorite) {
+      try {
+        this.favorite = JSON.parse(localStorage.getItem('favorite'))
+      } catch(e) {
+        localStorage.removeItem('favorite')
+      }
+    }
+  },
+
+
+  methods: {
+    addFavorite(city) {
+      this.favorite[city] = true
+      localStorage.setItem('favorite', JSON.stringify(this.favorite))
+    },
+
+    removeFavorite(city) {
+      delete this.favorite[city]
+      localStorage.setItem('favorite', JSON.stringify(this.favorite))
+    },
+
+    searchWeather() {
+      this.getTodayWeatherByCity()
+      this.getForecastByCity()
+    },
+
+    getCoordsAndUpdate() {
+      let lat, lon
+      if (this.$q.platform.is.electron) {
         this.$axios(
+          `https://api.ipbase.com/v1/json/`
+        ).then(response => {
+          console.log("position: ", response)
+          lat = response.data.latitude
+          lon = response.data.longitude
+        }).then(() => {
+          this.getTodayWeatherByCoords(lat, lon)
+        })
+      }
+      else {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log("position: ", position)
+          lat = position.coords.latitude
+          lon = position.coords.longitude
+          this.getTodayWeatherByCoords(lat, lon)
+        })
+      }
+    },
+
+    getTodayWeatherByCoords(lat, lon) {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${ lat }&lon=${ lon }&appid=${ this.store.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        console.log("response: ", response)
+        this.weatherData = response.data
+        this.errorMessage = null
+        this.store.currentCityName = response.data.name
+        this.getForecastByCity()
+        this.updateMap()
+      }).catch((error) => {
+        this.weatherData = null
+        this.errorMessage = error
+        console.log(error)
+      })
+    },
+
+    getTodayWeatherByCity() {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/weather?q=${ this.store.currentCityName }&appid=${ this.store.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        console.log("response: ", response)
+        this.weatherData = response.data
+        this.errorMessage = null
+        this.store.currentCityName = response.data.name
+        this.updateMap()
+      }).catch((error) => {
+        this.weatherData = null
+        this.errorMessage = error
+        console.log(error)
+      })
+    },
+
+    getForecastByCity() {
+      this.$axios(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${ this.store.currentCityName }&appid=${ this.store.apiKey }&units=metric&lang=ua`
+      ).then(response => {
+        console.log("forecast: ", response)
+
+        let dataList = {}
+        for (let i = 0; i < response.data.cnt; i++) {
+          let date = new Date(response.data.list[i].dt * 1000).toLocaleDateString()
+          if (!dataList[date]) {
+            dataList[date] = []
+          }
+          dataList[date].push({
+            temp_min: response.data.list[i].main.temp_min,
+            temp_max: response.data.list[i].main.temp_max,
+            icon: response.data.list[i].weather[0].icon
+          })
+        }
+        delete dataList[new Date().toLocaleDateString()]
+        console.log("dataList:", dataList)
+
+        let resultList = []
+        let index = 0
+        for (let date in dataList) {
+          let dayData = {}
+          let iconCount = {}
+          dayData.date = date
+          dataList[date].forEach((element) => {
+            if (!dayData.temp_min || dayData.temp_min > element.temp_min) {
+              dayData.temp_min = element.temp_min
+            }
+            if (!dayData.temp_max || dayData.temp_max < element.temp_max) {
+              dayData.temp_max = element.temp_max
+            }
+            let icon = element.icon.substr(0, 2)
+            if (!iconCount[icon]) {
+              iconCount[icon] = 1
+            }
+            else {
+              iconCount[icon]++
+            }
+          })
+
+          let max = 0
+          for (let key in iconCount) {
+            if (iconCount[key] > max) {
+              max = iconCount[key]
+              dayData.icon = key + 'd'
+            }
+          }
+
+          dayData.temp_min = Math.floor(dayData.temp_min)
+          dayData.temp_max = Math.ceil(dayData.temp_max)
+          resultList[index] = dayData
+          index++
+        }
+
+        this.forecastData = resultList
+      }).catch((error) => {
+        this.forecastData = null
+        this.errorMessage = error
+      })
+    },
+
+    getWeatherIconReplacer(original) {
+      let c = this.weatherIcons[original.substr(0, 2)]
+      if (original.endsWith('d')) {
+        return c.day
           `https://api.ipbase.com/v1/json/`
         ).then(response => {
           console.log("position: ", response)
@@ -450,6 +623,41 @@ justify-content: space-between;
   // // opacity: 0.6;
   color: #ffffff;
 
+  // color: #00921d;
+  // // opacity: 0.6;
+  color: #ffffff;
+
+}
+
+
+.weather-map {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+  margin: 0 auto;
+  margin-bottom: 20px;
+  width: 400px;
+  height: 350px;
+  overflow: hidden;
+}
+
+.weather-map img {
+  width: 350px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.info-box {
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 
